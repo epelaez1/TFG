@@ -1,0 +1,4 @@
+flake8
+wemake-python-styleguide
+mypy
+pytest
