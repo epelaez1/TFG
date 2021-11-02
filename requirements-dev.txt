@@ -3,3 +3,4 @@ wemake-python-styleguide
 mypy
 pytest
 pytest-cov
+requests
