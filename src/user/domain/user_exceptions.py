@@ -1,0 +1,4 @@
+
+
+class UserAlreadyRegistered(BaseException):
+    ...
