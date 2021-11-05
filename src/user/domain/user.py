@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING
 
 from src.user.domain.user_exceptions import UserAlreadyRegistered
@@ -12,6 +12,9 @@ class User:
     phone: str
     email: str
     verified: bool = False
+
+    def to_dict(self) -> dict[str, str | bool]:
+        return asdict(self)
 
 
 def register_new_user(name: str, phone: str, email: str, user_repository: 'UserRepository') -> User:
