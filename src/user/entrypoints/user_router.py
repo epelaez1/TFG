@@ -1,14 +1,12 @@
-from fastapi import (
-    APIRouter,
-    status,
-    HTTPException,
-)
-from pydantic import BaseModel, EmailStr
+from fastapi import APIRouter
+from fastapi import HTTPException
+from fastapi import status
+from pydantic import BaseModel
+from pydantic import EmailStr
 
-from src.user.user_services import register_user
 from src.user.domain.user_exceptions import UserAlreadyRegistered
 from src.user.domain.user_repository import BasicUserRepository
-
+from src.user.user_services import register_user
 
 router: APIRouter = APIRouter(
     prefix='/user',
