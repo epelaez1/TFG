@@ -1,8 +1,8 @@
 import pytest
 
-from src.user.user_services import register_user
-from src.user.domain.user_repository import UserRepository
 from src.user.domain.user_exceptions import UserAlreadyRegistered
+from src.user.domain.user_repository import UserRepository
+from src.user.user_services import register_user
 
 
 def test_new_user_register(user_repository: UserRepository, user_sample: dict[str, str]):

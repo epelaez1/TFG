@@ -1,4 +1,5 @@
-from src.user.domain.user import User, register_new_user
+from src.user.domain.user import register_new_user
+from src.user.domain.user import User
 from src.user.domain.user_repository import UserRepository
 
 

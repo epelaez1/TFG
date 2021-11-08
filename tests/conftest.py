@@ -2,8 +2,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from src.user.domain.user_repository import UserRepository
 from src.user.domain.user_repository import BasicUserRepository
+from src.user.domain.user_repository import UserRepository
 
 
 @pytest.fixture

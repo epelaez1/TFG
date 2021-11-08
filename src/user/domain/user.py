@@ -1,7 +1,9 @@
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from src.user.domain.user_exceptions import UserAlreadyRegistered
+
 if TYPE_CHECKING:
     from src.user.domain.user_repository import UserRepository
 

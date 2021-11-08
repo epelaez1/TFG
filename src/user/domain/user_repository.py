@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 
 from src.user.domain.user import User
 from src.user.domain.user_exceptions import UserAlreadyRegistered
