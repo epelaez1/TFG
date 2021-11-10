@@ -22,10 +22,10 @@ class BasicUserRepository(UserRepository):
         self.users: dict[str, User] = {}
 
     def add(self, user: User) -> None:
-        if not self.has(user.email):
-            self.users[user.email] = user
-        else:
+        if self.has(user.email):
             raise UserAlreadyRegistered
+        else:
+            self.users[user.email] = user
 
     def has(self, email: str) -> bool:
         return email in self.users
