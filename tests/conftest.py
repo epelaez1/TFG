@@ -21,5 +21,5 @@ def user_sample() -> dict[str, str]:
     return {
         'email': 'new_user@mail.es',
         'name': 'bob',
-        'phone': '6543213210'
+        'phone': '6543213210',
     }

@@ -34,6 +34,6 @@ user_repository = BasicUserRepository()
 async def create_user(user: NewUser) -> dict[str, str | bool]:
     try:
         new_user = register_user(user_repository=user_repository, email=user.email, name=user.name, phone=user.phone)
-        return new_user.to_dict()
     except UserAlreadyRegistered:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='User already exists')
+    return new_user.to_dict()

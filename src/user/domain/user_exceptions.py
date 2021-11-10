@@ -1,4 +1,4 @@
 
 
-class UserAlreadyRegistered(BaseException):
-    ...
+class UserAlreadyRegistered(Exception):
+    """ User already exists """
