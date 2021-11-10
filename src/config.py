@@ -14,4 +14,12 @@ class MongoDBSettings(Settings):
         env_prefix = 'MONGO_DB_'
 
 
+class Environment(Settings):
+    production: bool = False
+
+    class Config(Settings.Config):
+        env_prefix = 'ENV_'
+
+
 mongo_settings = MongoDBSettings()
+environment = Environment()
