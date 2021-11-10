@@ -35,3 +35,10 @@ def mongo_user_repository():
     with MongoDBClient(uri=mongo_settings.uri, database=TEST_DB_NAME) as db_client:
         yield UserMongoDB(client=db_client)
         db_client.drop_test_database(TEST_DB_NAME)
+
+
+@pytest.fixture
+def mongo_client():
+    with MongoDBClient(uri=mongo_settings.uri, database=TEST_DB_NAME) as db_client:
+        yield db_client
+        db_client.drop_test_database(TEST_DB_NAME)
