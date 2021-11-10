@@ -19,7 +19,7 @@ jobs:
           pip install -r requirements-dev.txt
           pip install pytest
           pytest
-      - name: Wemake Python Stylguide
+      - name: Wemake Python Style guide
         uses: wemake-services/wemake-python-styleguide@0.15.3
         continue-on-error: true
         with:
