@@ -4,8 +4,8 @@ from fastapi import status
 from pydantic import BaseModel
 from pydantic import EmailStr
 
+from src.bootstrap import user_repository
 from src.user.domain.user_exceptions import UserAlreadyRegistered
-from src.user.domain.user_repository import BasicUserRepository
 from src.user.user_services import register_user
 
 router: APIRouter = APIRouter(
@@ -21,9 +21,6 @@ class NewUser(BaseModel):
 
 class User(NewUser):
     verified: bool
-
-
-user_repository = BasicUserRepository()
 
 
 @router.post(

@@ -15,7 +15,7 @@ class MongoDBSettings(Settings):
 
 
 class Environment(Settings):
-    production: bool = False
+    is_production: bool = False
 
     class Config(Settings.Config):
         env_prefix = 'ENV_'

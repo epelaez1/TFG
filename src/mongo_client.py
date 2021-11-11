@@ -20,7 +20,7 @@ class MongoDBClient:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        self._close_connection()
+        self.close_connection()
 
     def get_collection(self, collection_name: str) -> Collection:
         return self._db[collection_name]
@@ -30,5 +30,5 @@ class MongoDBClient:
             raise KeyError
         self._client.drop_database(db_name)
 
-    def _close_connection(self) -> None:
+    def close_connection(self) -> None:
         self._client.close()
