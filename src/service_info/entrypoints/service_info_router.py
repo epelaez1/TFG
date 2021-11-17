@@ -9,6 +9,7 @@ router: APIRouter = APIRouter(
 @router.get(
     '/',
     status_code=status.HTTP_200_OK,
+    name='service-info',
 )
 async def get_service_status() -> dict[str, str]:
     return {'status': 'ok'}
