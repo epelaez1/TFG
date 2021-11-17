@@ -1,3 +1,5 @@
+from typing import Any
+
 from pymongo.collection import Collection
 
 from src.mongo_client import MongoDBClient
@@ -17,4 +19,10 @@ class UserMongoDB(UserRepository):
         return int(self.user_collection.count_documents({'email': email})) == 1
 
     def add(self, user: User) -> None:
-        self.user_collection.insert_one(user.to_dict())
+        self.user_collection.insert_one(user.dict())
+
+    def get(self, email: str) -> User:
+        user_in_db: dict[str, Any] = self.user_collection.find_one({'email': email})
+        if user_in_db is None:
+            raise ValueError
+        return User(**user_in_db)

@@ -1,6 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 
+from src.user.domain.exceptions import UserDoesNotExists
 from src.user.domain.user import User
 
 
@@ -14,6 +15,10 @@ class UserRepository(ABC):
     def add(self, user: User) -> None:
         raise NotImplementedError
 
+    @abstractmethod
+    def get(self, email: str) -> User:
+        raise NotImplementedError
+
 
 class BasicUserRepository(UserRepository):
 
@@ -25,3 +30,8 @@ class BasicUserRepository(UserRepository):
 
     def has(self, email: str) -> bool:
         return email in self.users
+
+    def get(self, email: str) -> User:
+        if not self.has(email):
+            raise UserDoesNotExists
+        return self.users[email]

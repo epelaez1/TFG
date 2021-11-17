@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 
-from src.service_info.entrypoints import service_info_router
-from src.user.entrypoints import user_router
+from src.bootstrap import initialize_app
 
-app = FastAPI()
-app.include_router(service_info_router.router)
-app.include_router(user_router.router)
+
+app: FastAPI = initialize_app()

@@ -2,7 +2,7 @@ import pytest
 
 from src.mongo_client import MongoDBClient
 
-NON_TEST_DB = 'dropable_db'
+NON_TEST_DB = 'non_dropable_db'
 
 
 def test_mongo_client_cant_drop_a_non_test_db(mongo_client: MongoDBClient):
