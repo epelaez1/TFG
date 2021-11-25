@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from main import app as main_app
 from src.config import environment
 from src.config import mongo_settings
+from src.dependencies import repositories
 from src.mongo_client import MongoDBClient
 
 TEST_DB_NAME = 'tfg_testing_db'
@@ -12,6 +13,7 @@ TEST_DB_NAME = 'tfg_testing_db'
 
 @pytest.fixture
 def app() -> FastAPI:
+    repositories.reload_repositories()
     return main_app
 
 

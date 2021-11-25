@@ -1,25 +1,25 @@
 import pytest
-from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from starlette.routing import BaseRoute
 
-from src.bootstrap import add_routers
+from src.authentication.entrypoints import auth_router
+from src.authentication.entrypoints.exception_handlers import auth_exc_handlers
 from src.bootstrap import initialize_app
+from src.profile.entrypoints import profile_router
+from src.profile.entrypoints.exception_handlers import profile_exc_handlers
 from src.service_info.entrypoints import service_info_router
-from src.user.entrypoints import user_router
-from src.user.entrypoints.exception_handlers import user_exc_handlers
 
 
 @pytest.mark.parametrize(
     'api_routes',
     [
         service_info_router.router.routes,
-        user_router.router.routes,
+        profile_router.router.routes,
+        auth_router.router.routes,
     ],
 )
 def test_routes_included_in_app(api_routes: list[BaseRoute]):
-    app = FastAPI()
-    add_routers(app)
+    app = initialize_app()
     for route in api_routes:
         if isinstance(route, APIRoute) and route.name is not None:
             app.url_path_for(route.name)
@@ -30,11 +30,11 @@ def test_routes_included_in_app(api_routes: list[BaseRoute]):
 @pytest.mark.parametrize(
     'exc_handlers',
     [
-        user_exc_handlers,
+        profile_exc_handlers,
+        auth_exc_handlers,
     ],
 )
 def test_exc_handlers_included_in_app(exc_handlers):
     app = initialize_app()
-
     for exc in exc_handlers:
         assert exc in app.exception_handlers

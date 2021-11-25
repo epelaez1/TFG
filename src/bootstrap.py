@@ -1,30 +1,37 @@
-from typing import Callable
-from typing import Type
-
 from fastapi import FastAPI
-from fastapi import Request
-from fastapi.responses import JSONResponse
 
+from src.authentication.entrypoints import auth_router
+from src.authentication.entrypoints.exception_handlers import auth_exc_handlers
+from src.profile.entrypoints import profile_router
+from src.profile.entrypoints.exception_handlers import profile_exc_handlers
 from src.service_info.entrypoints import service_info_router
-from src.user.entrypoints import user_router
-from src.user.entrypoints.exception_handlers import user_exc_handlers
+
+all_routers = [
+    service_info_router.router,
+    profile_router.router,
+    auth_router.router,
+]
+
+
+all_exc_handlers = [
+    profile_exc_handlers,
+    auth_exc_handlers,
+]
 
 
 def add_routers(app: FastAPI) -> None:
-    app.include_router(service_info_router.router)
-    app.include_router(user_router.router)
+    for router in all_routers:
+        app.include_router(router)
 
 
-def add_error_handlers(
-    app: FastAPI,
-    exc_handlers: dict[Type[Exception], Callable[[Request | None, Exception | None], JSONResponse]],
-) -> None:
-    for exc_type, exc_handler in exc_handlers.items():
-        app.add_exception_handler(exc_type, exc_handler)
+def add_error_handlers(app: FastAPI) -> None:
+    for exc_handlers in all_exc_handlers:
+        for exc_type, exc_handler in exc_handlers.items():
+            app.add_exception_handler(exc_type, exc_handler)
 
 
 def initialize_app() -> FastAPI:
     app = FastAPI()
     add_routers(app)
-    add_error_handlers(app, user_exc_handlers)
+    add_error_handlers(app)
     return app
