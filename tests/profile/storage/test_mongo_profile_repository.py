@@ -1,5 +1,6 @@
 import pytest
 
+from src.profile.domain.exceptions import ProfileDoesNotExist
 from src.profile.profile_services import register_profile
 from src.profile.storage.mongo_profile_repository import ProfileMongoDB
 from tests.profile.conftest import ProfileSample
@@ -18,5 +19,5 @@ def test_get_returns_profile(mongo_profile_repository: ProfileMongoDB, profile_s
 
 
 def test_get_inexistent_profile(mongo_profile_repository: ProfileMongoDB):
-    with pytest.raises(ValueError):
+    with pytest.raises(ProfileDoesNotExist):
         mongo_profile_repository.get(email='inexistent_email@mail.com')
