@@ -33,5 +33,5 @@ class BasicProfileRepository(ProfileRepository):
 
     def get(self, email: str) -> Profile:
         if not self.has(email):
-            raise ProfileDoesNotExist
+            raise ProfileDoesNotExist()
         return self.profiles[email]
