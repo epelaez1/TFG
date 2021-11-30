@@ -34,7 +34,7 @@ class BasicVenueRepository(VenueRepository):
         return str(id_) in self.venues
 
     def get(self, id_: str | ObjectId) -> Venue:
-        venue = self.venues.get(str(id))
+        venue = self.venues.get(str(id_))
         if venue is None:
             raise VenueDoesNotExist
         return venue

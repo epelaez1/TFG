@@ -23,3 +23,7 @@ def register_venue(  # noqa: WPS211
     )
     venue_repository.add(venue=venue)
     return venue.id
+
+
+def get_venue(id_: str, venue_repository: VenueRepository) -> Venue:
+    return venue_repository.get(id_=id_)
