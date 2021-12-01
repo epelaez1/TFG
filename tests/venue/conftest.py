@@ -14,6 +14,18 @@ class VenueSample(BaseModel):
     owner_email: str = 'new_user@mail.es'
 
 
+class PrivateSpotSample(BaseModel):
+    name: str = 'Premium spot'
+    description: str = 'The best private spot of the universe'
+    spot_number: int = 1
+    price: int = 100_00  # noqa: WPS303
+
+
+@pytest.fixture
+def private_spot_sample():
+    return PrivateSpotSample()
+
+
 @pytest.fixture
 def venue_sample():
     return VenueSample()
