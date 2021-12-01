@@ -6,6 +6,14 @@ from pydantic import Field
 from src.resources.pydantic_types.object_id import PyObjectId
 
 
+class PrivateSpot(BaseModel):
+    id: PyObjectId = Field(alias='_id', default_factory=ObjectId)
+    spot_number: int
+    standard_price: int
+    name: str = ''
+    description: str = ''
+
+
 class Venue(BaseModel):
     id: PyObjectId = Field(alias='_id', default_factory=ObjectId)
     name: str
@@ -14,6 +22,7 @@ class Venue(BaseModel):
     country: str
     geolocation: Point
     owner_email: str
+    private_spots: list[PrivateSpot] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
