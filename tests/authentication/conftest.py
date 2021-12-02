@@ -5,13 +5,13 @@ from datetime import timedelta
 import pytest
 from pydantic import BaseModel
 
-from src.authentication.auth_services import register_user
-from src.authentication.domain.credentials import Credentials
-from src.authentication.domain.credentials import TokenData
-from src.authentication.domain.credentials_repository import BasicCredentialsRepository
-from src.authentication.domain.credentials_repository import CredentialsRepository
-from src.authentication.domain.session import SessionToken
-from src.authentication.storage.mongo_cred_repository import CredentialsMongoDB
+from src.authentication.domain.entities.credentials import Credentials
+from src.authentication.domain.entities.credentials import TokenData
+from src.authentication.domain.entities.session import SessionToken
+from src.authentication.domain.repository import BasicCredentialsRepository
+from src.authentication.domain.repository import CredentialsRepository
+from src.authentication.services import register_user
+from src.authentication.storage.mongo_repository import CredentialsMongoDB
 
 
 class CredentialsSample(BaseModel):

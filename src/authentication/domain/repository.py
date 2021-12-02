@@ -2,7 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 
 from src.authentication.domain import exceptions
-from src.authentication.domain.credentials import Credentials
+from src.authentication.domain.entities.credentials import Credentials
 
 
 class CredentialsRepository(ABC):

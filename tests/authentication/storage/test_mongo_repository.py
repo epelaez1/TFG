@@ -1,9 +1,9 @@
 import pytest
 
-from src.authentication.auth_services import register_user
-from src.authentication.auth_services import update_profile
 from src.authentication.domain import exceptions
-from src.authentication.storage.mongo_cred_repository import CredentialsMongoDB
+from src.authentication.services import register_user
+from src.authentication.services import update_profile
+from src.authentication.storage.mongo_repository import CredentialsMongoDB
 from tests.authentication.conftest import CredentialsSample
 
 

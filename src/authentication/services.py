@@ -1,9 +1,9 @@
 from src.authentication.domain import exceptions
-from src.authentication.domain.credentials import Credentials
-from src.authentication.domain.credentials import register
-from src.authentication.domain.credentials import TokenData
-from src.authentication.domain.credentials_repository import CredentialsRepository
-from src.authentication.domain.session import SessionToken
+from src.authentication.domain.entities.credentials import Credentials
+from src.authentication.domain.entities.credentials import register
+from src.authentication.domain.entities.credentials import TokenData
+from src.authentication.domain.entities.session import SessionToken
+from src.authentication.domain.repository import CredentialsRepository
 
 
 def register_user(

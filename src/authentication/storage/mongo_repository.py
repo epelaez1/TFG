@@ -3,8 +3,8 @@ from typing import Any
 from pymongo.collection import Collection
 
 from src.authentication.domain import exceptions
-from src.authentication.domain.credentials import Credentials
-from src.authentication.domain.credentials_repository import CredentialsRepository
+from src.authentication.domain.entities.credentials import Credentials
+from src.authentication.domain.repository import CredentialsRepository
 from src.mongo_client import MongoDBClient
 
 AUTH_COLLECTION = 'authentication'
