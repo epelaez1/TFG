@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from geojson_pydantic import Point
 
-from src.venue.domain import exceptions
-from src.venue.domain.venue import PrivateSpot
-from src.venue.domain.venue import Venue
-from src.venue.domain.venue_repository import VenueRepository
+from src.venue.domain.social_event.social_event import SocialEvent
+from src.venue.domain.social_event.social_event_repository import SocialEventRepository
+from src.venue.domain.venue import exceptions
+from src.venue.domain.venue.venue import PrivateSpot
+from src.venue.domain.venue.venue import Venue
+from src.venue.domain.venue.venue_repository import VenueRepository
 
 
 def register_venue(  # noqa: WPS211
@@ -55,3 +59,26 @@ def add_private_spot(  # noqa: WPS211 Too many arguments
     )
 
     venue_repository.add_private_spot(id_=venue_id, private_spot=private_spot)
+
+
+def create_social_event(  # noqa: WPS211 Too many arguments
+    venue_id: str,
+    name: str,
+    description: str,
+    start_date: datetime,
+    end_date: datetime,
+    social_event_repository: SocialEventRepository,
+) -> str:
+    social_event = SocialEvent(
+        venue_id=venue_id,
+        name=name,
+        description=description,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    social_event_repository.add(social_event)
+    return str(social_event.id)
+
+
+def get_social_event(social_event_id: str, social_event_repository: SocialEventRepository) -> SocialEvent:
+    return social_event_repository.get(social_event_id)
