@@ -15,6 +15,12 @@ class PrivateSpot(BaseModel):
     name: Optional[str]
     description: Optional[str]
 
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str,
+        }
+
 
 class Venue(BaseModel):
     id: PyObjectId = Field(alias='_id', default_factory=ObjectId)
