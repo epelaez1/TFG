@@ -3,9 +3,9 @@ from typing import Any
 from pymongo.collection import Collection
 
 from src.mongo_client import MongoDBClient
+from src.profile.domain.entities.profile import Profile
 from src.profile.domain.exceptions import ProfileDoesNotExist
-from src.profile.domain.profile import Profile
-from src.profile.domain.profile_repository import ProfileRepository
+from src.profile.domain.repository import ProfileRepository
 
 USER_COLLECTION = 'profiles'
 

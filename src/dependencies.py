@@ -8,8 +8,8 @@ from src.authentication.storage.mongo_cred_repository import CredentialsMongoDB
 from src.config import environment
 from src.config import mongo_settings
 from src.mongo_client import MongoDBClient
-from src.profile.domain.profile_repository import BasicProfileRepository
-from src.profile.storage.mongo_profile_repository import ProfileMongoDB
+from src.profile.domain.repository import BasicProfileRepository
+from src.profile.storage.mongo_repository import ProfileMongoDB
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')

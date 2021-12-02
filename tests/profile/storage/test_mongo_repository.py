@@ -1,8 +1,8 @@
 import pytest
 
 from src.profile.domain.exceptions import ProfileDoesNotExist
-from src.profile.profile_services import register_profile
-from src.profile.storage.mongo_profile_repository import ProfileMongoDB
+from src.profile.services import register_profile
+from src.profile.storage.mongo_repository import ProfileMongoDB
 from tests.profile.conftest import ProfileSample
 
 
