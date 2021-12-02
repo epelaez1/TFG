@@ -11,7 +11,7 @@ from tests.venue.conftest import VenueSample
 
 
 def test_register_venue(venue_sample: VenueSample, venue_repository: VenueRepository):
-    venue_id: ObjectId = services.register_venue(
+    venue_id: str = services.register_venue(
         **venue_sample.dict(),
         venue_repository=venue_repository,
     )
