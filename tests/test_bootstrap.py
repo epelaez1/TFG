@@ -2,8 +2,8 @@ import pytest
 from fastapi.routing import APIRoute
 from starlette.routing import BaseRoute
 
-from src.authentication.entrypoints import auth_router
 from src.authentication.entrypoints.exception_handlers import auth_exc_handlers
+from src.authentication.entrypoints.router import auth_router
 from src.bootstrap import initialize_app
 from src.profile.entrypoints.exception_handlers import profile_exc_handlers
 from src.profile.entrypoints.router import profile_router
@@ -15,7 +15,7 @@ from src.service_info.entrypoints.router import service_info_router
     [
         service_info_router.routes,
         profile_router.routes,
-        auth_router.router.routes,
+        auth_router.routes,
     ],
 )
 def test_routes_included_in_app(api_routes: list[BaseRoute]):

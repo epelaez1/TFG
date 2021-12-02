@@ -2,8 +2,8 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import status
 
-from src.authentication import auth_services
-from src.authentication.domain.session import SessionToken
+from src.authentication import services as auth_services
+from src.authentication.domain.entities.session import SessionToken
 from src.config import environment
 from src.dependencies import authorized_user_email
 from src.dependencies import profile_creation_email

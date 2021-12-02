@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 
 from src.authentication.domain import exceptions
-from src.authentication.domain.hashed_password import hash_password
-from src.authentication.domain.hashed_password import HashedPassword
-from src.authentication.domain.session import create_session_token
-from src.authentication.domain.session import SessionToken
+from src.authentication.domain.entities.hashed_password import hash_password
+from src.authentication.domain.entities.hashed_password import HashedPassword
+from src.authentication.domain.entities.session import create_session_token
+from src.authentication.domain.entities.session import SessionToken
 
 if TYPE_CHECKING:
-    from src.authentication.domain.credentials_repository import CredentialsRepository
+    from src.authentication.domain.repository import CredentialsRepository
 
 
 class TokenData(BaseModel):

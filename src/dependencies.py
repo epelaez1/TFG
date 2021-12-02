@@ -1,10 +1,10 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from src.authentication import auth_services
-from src.authentication.domain.credentials import TokenData
-from src.authentication.domain.credentials_repository import BasicCredentialsRepository
-from src.authentication.storage.mongo_cred_repository import CredentialsMongoDB
+from src.authentication import services
+from src.authentication.domain.entities.credentials import TokenData
+from src.authentication.domain.repository import BasicCredentialsRepository
+from src.authentication.storage.mongo_repository import CredentialsMongoDB
 from src.config import environment
 from src.config import mongo_settings
 from src.mongo_client import MongoDBClient
@@ -16,12 +16,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
 
 async def profile_creation_email(token: str = Depends(oauth2_scheme)) -> str:
-    token_data: TokenData = auth_services.authorize_profile_creation(token=token, secret_key=environment.secret_key)
+    token_data: TokenData = services.authorize_profile_creation(token=token, secret_key=environment.secret_key)
     return token_data.email
 
 
 async def authorized_user_email(token: str = Depends(oauth2_scheme)) -> str:
-    token_data = auth_services.authorize(token=token, secret_key=environment.secret_key)
+    token_data = services.authorize(token=token, secret_key=environment.secret_key)
     return token_data.email
 
 
