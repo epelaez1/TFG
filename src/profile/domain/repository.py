@@ -1,8 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
 
+from src.profile.domain.entities.profile import Profile
 from src.profile.domain.exceptions import ProfileDoesNotExist
-from src.profile.domain.profile import Profile
 
 
 class ProfileRepository(ABC):

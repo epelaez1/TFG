@@ -5,16 +5,16 @@ from starlette.routing import BaseRoute
 from src.authentication.entrypoints import auth_router
 from src.authentication.entrypoints.exception_handlers import auth_exc_handlers
 from src.bootstrap import initialize_app
-from src.profile.entrypoints import profile_router
 from src.profile.entrypoints.exception_handlers import profile_exc_handlers
-from src.service_info.entrypoints import service_info_router
+from src.profile.entrypoints.router import profile_router
+from src.service_info.entrypoints.router import service_info_router
 
 
 @pytest.mark.parametrize(
     'api_routes',
     [
-        service_info_router.router.routes,
-        profile_router.router.routes,
+        service_info_router.routes,
+        profile_router.routes,
         auth_router.router.routes,
     ],
 )

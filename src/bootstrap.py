@@ -2,13 +2,13 @@ from fastapi import FastAPI
 
 from src.authentication.entrypoints import auth_router
 from src.authentication.entrypoints.exception_handlers import auth_exc_handlers
-from src.profile.entrypoints import profile_router
 from src.profile.entrypoints.exception_handlers import profile_exc_handlers
-from src.service_info.entrypoints import service_info_router
+from src.profile.entrypoints.router import profile_router
+from src.service_info.entrypoints.router import service_info_router
 
 all_routers = [
-    service_info_router.router,
-    profile_router.router,
+    service_info_router,
+    profile_router,
     auth_router.router,
 ]
 

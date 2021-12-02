@@ -8,16 +8,16 @@ from src.config import environment
 from src.dependencies import authorized_user_email
 from src.dependencies import profile_creation_email
 from src.dependencies import repositories
-from src.profile import profile_services
-from src.profile.domain.profile import Profile
-from src.profile.entrypoints import profile_models as models
+from src.profile import services
+from src.profile.domain.entities.profile import Profile
+from src.profile.entrypoints import models
 
-router: APIRouter = APIRouter(
+profile_router: APIRouter = APIRouter(
     prefix='/profile',
 )
 
 
-@router.post(
+@profile_router.post(
     '/',
     status_code=status.HTTP_201_CREATED,
     response_model=models.Token,
@@ -27,7 +27,7 @@ async def create_profile(
     profile: models.BaseProfile,
     email: str = Depends(profile_creation_email),
 ) -> SessionToken:
-    profile_services.register_profile(
+    services.register_profile(
         **profile.dict(),
         email=email,
         profile_repository=repositories.profile_repository,
@@ -39,7 +39,7 @@ async def create_profile(
     )
 
 
-@router.get(
+@profile_router.get(
     '/',
     status_code=status.HTTP_200_OK,
     response_model=models.PublicProfile,
@@ -48,4 +48,4 @@ async def create_profile(
 async def get_current_profile(
     profile_email: str = Depends(authorized_user_email),
 ) -> Profile:
-    return profile_services.get_profile(email=profile_email, profile_repository=repositories.profile_repository)
+    return services.get_profile(email=profile_email, profile_repository=repositories.profile_repository)

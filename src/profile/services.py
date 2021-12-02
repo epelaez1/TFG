@@ -1,6 +1,6 @@
+from src.profile.domain.entities.profile import Profile
 from src.profile.domain.exceptions import ProfileAlreadyInitialized
-from src.profile.domain.profile import Profile
-from src.profile.domain.profile_repository import ProfileRepository
+from src.profile.domain.repository import ProfileRepository
 
 
 def register_profile(name: str, email: str, phone: str, profile_repository: ProfileRepository) -> Profile:

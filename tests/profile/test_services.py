@@ -1,8 +1,8 @@
 import pytest
 
-from src.profile import profile_services
+from src.profile import services as profile_services
 from src.profile.domain import exceptions
-from src.profile.domain.profile_repository import ProfileRepository
+from src.profile.domain.repository import ProfileRepository
 from tests.profile.conftest import ProfileSample
 
 

@@ -3,9 +3,9 @@ from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
 
-from src.profile.domain.profile_repository import BasicProfileRepository
-from src.profile.domain.profile_repository import ProfileRepository
-from src.profile.storage.mongo_profile_repository import ProfileMongoDB
+from src.profile.domain.repository import BasicProfileRepository
+from src.profile.domain.repository import ProfileRepository
+from src.profile.storage.mongo_repository import ProfileMongoDB
 
 REGISTER_USER = 'auth:register'
 LOGIN = 'auth:login'
