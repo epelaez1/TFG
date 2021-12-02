@@ -30,8 +30,8 @@ def register_venue(  # noqa: WPS211
     return str(venue.id)
 
 
-def get_venue(id_: str, venue_repository: VenueRepository) -> Venue:
-    return venue_repository.get_venue(id_=id_)
+def get_venue(venue_id: str, venue_repository: VenueRepository) -> Venue:
+    return venue_repository.get_venue(venue_id=venue_id)
 
 
 def add_private_spot(  # noqa: WPS211 Too many arguments
@@ -43,7 +43,7 @@ def add_private_spot(  # noqa: WPS211 Too many arguments
     description: str | None,
     venue_repository: VenueRepository,
 ) -> None:
-    venue = venue_repository.get_venue(id_=venue_id)
+    venue = venue_repository.get_venue(venue_id=venue_id)
     if venue.owner_email != author_email:
         raise exceptions.AuthorIsNotTheOwner()
 
@@ -57,10 +57,11 @@ def add_private_spot(  # noqa: WPS211 Too many arguments
         price=price,
     )
 
-    venue_repository.add_private_spot(id_=venue_id, private_spot=private_spot)
+    venue_repository.add_private_spot(venue_id=venue_id, private_spot=private_spot)
 
 
 def create_social_event(  # noqa: WPS211 Too many arguments
+    author_email: str,
     venue_id: str,
     name: str,
     description: str,
@@ -68,7 +69,13 @@ def create_social_event(  # noqa: WPS211 Too many arguments
     end_date: datetime,
     venue_repository: VenueRepository,
 ) -> str:
+
+    venue = venue_repository.get_venue(venue_id)
+    if author_email != venue.owner_email:
+        raise exceptions.AuthorIsNotTheOwner()
+
     social_event = SocialEvent(
+        owner_email=author_email,
         venue_id=venue_id,
         name=name,
         description=description,
@@ -79,5 +86,8 @@ def create_social_event(  # noqa: WPS211 Too many arguments
     return str(social_event.id)
 
 
-def get_social_event(social_event_id: str, venue_repository: VenueRepository) -> SocialEvent:
-    return venue_repository.get_social_event(social_event_id)
+def get_social_event(author_email: str, social_event_id: str, venue_repository: VenueRepository) -> SocialEvent:
+    social_event = venue_repository.get_social_event(social_event_id)
+    if social_event.owner_email != author_email:
+        raise exceptions.AuthorIsNotTheOwner()
+    return social_event

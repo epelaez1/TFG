@@ -56,6 +56,7 @@ class SocialEventSample(BaseModel):
     description: str = 'A great show'
     start_date: datetime = Field(default_factory=datetime.utcnow)
     end_date: datetime = Field(default_factory=tomorrow)
+    author_email: str = 'new_user@mail.es'
 
 
 @pytest.fixture
