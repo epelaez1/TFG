@@ -32,3 +32,9 @@ class SocialEvent(BaseModel):
     end_date: datetime
     employee_lists: dict[str, EmployeesList] = Field(default_factory=dict)
     private_spots: list[PrivateSpot] = Field(default_factory=list)
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str,
+        }
