@@ -16,7 +16,8 @@ def test_register_venue(venue_sample: VenueSample, venue_repository: VenueReposi
 
 def test_get_venue(venue_sample: VenueSample, venue_repository: VenueRepository):
     venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
-    services.get_venue(str(venue_id), venue_repository=venue_repository)
+    venue = services.get_venue(str(venue_id), venue_repository=venue_repository)
+    assert str(venue.id) == venue_id
 
 
 def test_get_inexistent_venue(venue_repository: VenueRepository):
