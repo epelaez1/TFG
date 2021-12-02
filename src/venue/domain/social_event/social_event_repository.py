@@ -1,8 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
 
-from src.social_event.domain.exceptions import SocialEventDoesNotExist
-from src.social_event.domain.social_event import SocialEvent
+from src.venue.domain.social_event.exceptions import SocialEventDoesNotExist
+from src.venue.domain.social_event.social_event import SocialEvent
 
 
 class SocialEventRepository(ABC):

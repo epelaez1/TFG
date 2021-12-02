@@ -1,9 +1,9 @@
 from abc import ABC
 from abc import abstractmethod
 
-from src.venue.domain.exceptions import VenueDoesNotExist
-from src.venue.domain.venue import PrivateSpot
-from src.venue.domain.venue import Venue
+from src.venue.domain.venue.exceptions import VenueDoesNotExist
+from src.venue.domain.venue.venue import PrivateSpot
+from src.venue.domain.venue.venue import Venue
 
 
 class VenueRepository(ABC):
