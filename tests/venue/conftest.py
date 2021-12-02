@@ -8,9 +8,7 @@ from pydantic import BaseModel
 from pydantic import Field
 
 from src.resources.pydantic_types.object_id import PyObjectId
-from src.venue.domain.social_event.social_event_repository import BasicSocialEventRepository
-from src.venue.domain.social_event.social_event_repository import SocialEventRepository
-from src.venue.domain.venue.venue_repository import BasicVenueRepository
+from src.venue.domain.repository import BasicVenueRepository
 
 
 class VenueSample(BaseModel):
@@ -63,8 +61,3 @@ class SocialEventSample(BaseModel):
 @pytest.fixture
 def social_event_sample() -> SocialEventSample:
     return SocialEventSample()
-
-
-@pytest.fixture
-def social_event_repository() -> SocialEventRepository:
-    return BasicSocialEventRepository()
