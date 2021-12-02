@@ -10,8 +10,11 @@ from tests.venue.conftest import VenueSample
 
 
 def test_register_venue(venue_sample: VenueSample, venue_repository: VenueRepository):
-    venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
-    assert venue_repository.has_venue(id_=venue_id)
+    venue_id: ObjectId = services.register_venue(   # noqa: WPS204
+        **venue_sample.dict(),
+        venue_repository=venue_repository,
+    )
+    assert venue_repository.has_venue(venue_id=venue_id)
 
 
 def test_get_venue(venue_sample: VenueSample, venue_repository: VenueRepository):
@@ -37,7 +40,7 @@ def test_add_new_private_spot(
         venue_repository=venue_repository,
         **private_spot_sample.dict(),
     )
-    new_venue = venue_repository.get_venue(id_=venue_id)
+    new_venue = venue_repository.get_venue(venue_id=venue_id)
     assert private_spot_sample.spot_number in new_venue.private_spot_numbers
     created_spot = next(
         private_spot
@@ -99,8 +102,11 @@ def test_add_private_spot_to_inexistent_venue(
 
 def test_create_social_event(
     social_event_sample: SocialEventSample,
+    venue_sample: VenueSample,
     venue_repository: VenueRepository,
 ):
+    venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
+    social_event_sample.venue_id = venue_id
     social_event_id = services.create_social_event(
         **social_event_sample.dict(),
         venue_repository=venue_repository,
@@ -108,15 +114,45 @@ def test_create_social_event(
     assert venue_repository.has_social_event(social_event_id=social_event_id)
 
 
-def test_get_social_event(
+def test_not_the_owner_create_social_event(
+    social_event_sample: SocialEventSample,
+    venue_sample: VenueSample,
+    venue_repository: VenueRepository,
+):
+    venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
+    social_event_sample.venue_id = venue_id
+    social_event_sample.author_email = 'not_the_owner_of_the_venue@mail.es'
+    with pytest.raises(exceptions.AuthorIsNotTheOwner):
+        services.create_social_event(
+            **social_event_sample.dict(),
+            venue_repository=venue_repository,
+        )
+
+
+def test_create_social_event_from_inexistent_venue(  # noqa: WPS118  Name too long
     social_event_sample: SocialEventSample,
     venue_repository: VenueRepository,
 ):
+    with pytest.raises(exceptions.VenueDoesNotExist):
+        services.create_social_event(
+            **social_event_sample.dict(),
+            venue_repository=venue_repository,
+        )
+
+
+def test_get_social_event(
+    social_event_sample: SocialEventSample,
+    venue_sample: VenueSample,
+    venue_repository: VenueRepository,
+):
+    venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
+    social_event_sample.venue_id = venue_id
     social_event_id = services.create_social_event(
         **social_event_sample.dict(),
         venue_repository=venue_repository,
     )
     social_event = services.get_social_event(
+        author_email=social_event_sample.author_email,
         social_event_id=social_event_id,
         venue_repository=venue_repository,
     )
@@ -126,6 +162,25 @@ def test_get_social_event(
     assert social_event_sample.description == social_event.description
     assert social_event_sample.start_date == social_event.start_date
     assert social_event_sample.end_date == social_event.end_date
+
+
+def test_not_the_owner_get_social_event(
+    social_event_sample: SocialEventSample,
+    venue_sample: VenueSample,
+    venue_repository: VenueRepository,
+):
+    venue_id: ObjectId = services.register_venue(**venue_sample.dict(), venue_repository=venue_repository)
+    social_event_sample.venue_id = venue_id
+    social_event_id = services.create_social_event(
+        **social_event_sample.dict(),
+        venue_repository=venue_repository,
+    )
+    with pytest.raises(exceptions.AuthorIsNotTheOwner):
+        services.get_social_event(
+            author_email='not_the_owner@mail.es',
+            social_event_id=social_event_id,
+            venue_repository=venue_repository,
+        )
 
 
 def test_get_inexistent_social_event(
