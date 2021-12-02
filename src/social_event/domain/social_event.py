@@ -27,7 +27,7 @@ class SocialEvent(BaseModel):
     id: PyObjectId = Field(alias='_id', default_factory=ObjectId)
     venue_id: str
     name: str
-    description: str = ''
+    description: str
     start_date: datetime
     end_date: datetime
     employee_lists: dict[str, EmployeesList] = Field(default_factory=dict)
