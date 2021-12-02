@@ -1,5 +1,4 @@
 
-
 class VenueDoesNotExist(Exception):
     """ Venue does not exist """
 
@@ -10,3 +9,7 @@ class AuthorIsNotTheOwner(Exception):
 
 class PrivateSpotNumberAlreadyAssigned(Exception):
     """" The spot number is already in use """
+
+
+class SocialEventDoesNotExist(Exception):
+    """" There is no social event with that id """
