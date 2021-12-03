@@ -206,8 +206,9 @@ def test_add_employee_list_to_social_event(
         venue_repository=venue_repository,
     )
     social_event = venue_repository.get_social_event(registered_social_event_id)
-    assert employee_list_sample.code in social_event.employee_lists
-    assert employee_list_sample.dict().items() <= social_event.employee_lists[employee_list_sample.code].dict().items()
+    employee_list = next(elem for elem in social_event.employee_lists if elem.code == employee_list_sample.code)
+    assert employee_list
+    assert employee_list_sample.dict().items() <= employee_list.dict().items()
 
 
 def test_add_employee_list_to_inexistent_social_event(

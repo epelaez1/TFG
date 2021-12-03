@@ -11,7 +11,12 @@ from src.resources.pydantic_types.object_id import PyObjectId
 class EmployeeList(BaseModel):
     employee_name: str
     code: str
-    subscribed_user: list[str] = Field(default_factory=list)
+
+    def __hash__(self) -> int:
+        return hash(self._key())
+
+    def _key(self) -> str:
+        return self.code
 
 
 class PrivateSpot(BaseModel):
@@ -31,7 +36,7 @@ class SocialEvent(BaseModel):
     description: str
     start_date: datetime
     end_date: datetime
-    employee_lists: dict[str, EmployeeList] = Field(default_factory=dict)
+    employee_lists: set[EmployeeList] = Field(default_factory=set)
     private_spots: list[PrivateSpot] = Field(default_factory=list)
 
     class Config:

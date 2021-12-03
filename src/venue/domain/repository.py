@@ -81,4 +81,4 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
         if social_event_id not in self.social_events:
             raise SocialEventDoesNotExist()
         social_event = self.social_events[social_event_id]
-        social_event.employee_lists[employee_list.code] = employee_list
+        social_event.employee_lists.add(employee_list)

@@ -106,8 +106,8 @@ def add_employee_list_to_social_event(
     if author_email != social_event.owner_email:
         raise exceptions.AuthorIsNotTheOwner()
 
-    if code in social_event.employee_lists:
+    employee_list = EmployeeList(code=code, employee_name=employee_name)
+    if employee_list in social_event.employee_lists:
         raise exceptions.EmployeeCodeAlreadyInUse()
 
-    employee_list = EmployeeList(code=code, employee_name=employee_name)
     venue_repository.add_employee_list_to_social_event(social_event_id=social_event_id, employee_list=employee_list)
