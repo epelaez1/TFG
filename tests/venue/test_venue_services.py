@@ -3,6 +3,7 @@ from bson import ObjectId
 
 from src.venue import services
 from src.venue.domain import exceptions
+from src.venue.domain.entities.social_event import PrivateSpotOffer
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.repository import VenueRepository
 from tests.venue.conftest import EmployeeListSample
@@ -42,15 +43,13 @@ def test_add_new_private_spot(
         venue_repository=venue_repository,
         **private_spot_sample.dict(),
     )
-    new_venue = venue_repository.get_venue(venue_id=str(registered_venue.id))
-    assert private_spot_sample.spot_number in new_venue.private_spot_numbers
+    venue = venue_repository.get_venue(venue_id=str(registered_venue.id))
     created_spot = next(
         private_spot
-        for private_spot in new_venue.private_spots
+        for private_spot in venue.private_spots
         if private_spot.spot_number == private_spot_sample.spot_number
     )
-    assert ObjectId.is_valid(created_spot.id)
-    assert created_spot.dict(by_alias=True) == {**private_spot_sample.dict(), '_id': created_spot.id}
+    assert created_spot.dict() == private_spot_sample.dict()
 
 
 def test_add_private_spot_with_number_in_use(
@@ -112,6 +111,12 @@ def test_create_social_event(
         venue_repository=venue_repository,
     )
     assert venue_repository.has_social_event(social_event_id=social_event_id)
+    social_event = venue_repository.get_social_event(social_event_id)
+    assert len(registered_venue.private_spots)
+    assert len(registered_venue.private_spots) == len(social_event.private_spot_offers)
+    for private_spot in registered_venue.private_spots:
+        private_spot_offer = PrivateSpotOffer(**private_spot.dict())
+        assert private_spot_offer in social_event.private_spot_offers
 
 
 def test_not_the_owner_create_social_event(

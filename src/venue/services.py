@@ -4,6 +4,7 @@ from geojson_pydantic import Point
 
 from src.venue.domain import exceptions
 from src.venue.domain.entities.social_event import EmployeeList
+from src.venue.domain.entities.social_event import PrivateSpotOffer
 from src.venue.domain.entities.social_event import SocialEvent
 from src.venue.domain.entities.venue import PrivateSpot
 from src.venue.domain.entities.venue import Venue
@@ -48,15 +49,15 @@ def add_private_spot(  # noqa: WPS211 Too many arguments
     if venue.owner_email != author_email:
         raise exceptions.AuthorIsNotTheOwner()
 
-    if spot_number in venue.private_spot_numbers:
-        raise exceptions.PrivateSpotNumberAlreadyAssigned()
-
     private_spot = PrivateSpot(
         spot_number=spot_number,
         name=name,
         description=description,
         price=price,
     )
+
+    if private_spot in venue.private_spots:
+        raise exceptions.PrivateSpotNumberAlreadyAssigned()
 
     venue_repository.add_private_spot(venue_id=venue_id, private_spot=private_spot)
 
@@ -74,7 +75,10 @@ def create_social_event(  # noqa: WPS211 Too many arguments
     venue = venue_repository.get_venue(venue_id)
     if author_email != venue.owner_email:
         raise exceptions.AuthorIsNotTheOwner()
-
+    private_spot_offers = {
+        PrivateSpotOffer(**private_spot.dict())
+        for private_spot in venue.private_spots
+    }
     social_event = SocialEvent(
         owner_email=author_email,
         venue_id=venue_id,
@@ -82,6 +86,7 @@ def create_social_event(  # noqa: WPS211 Too many arguments
         description=description,
         start_date=start_date,
         end_date=end_date,
+        private_spot_offers=private_spot_offers,
     )
     venue_repository.add_social_event(social_event)
     return str(social_event.id)

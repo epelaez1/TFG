@@ -63,8 +63,7 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
         return venue
 
     def add_private_spot(self, venue_id: str, private_spot: PrivateSpot) -> None:
-        self.venues[venue_id].private_spot_numbers.add(private_spot.spot_number)
-        self.venues[venue_id].private_spots.append(private_spot)
+        self.venues[venue_id].private_spots.add(private_spot)
 
     def has_social_event(self, social_event_id: str) -> bool:
         return social_event_id in self.social_events
