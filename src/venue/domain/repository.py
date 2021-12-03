@@ -1,6 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 
+from src.venue.domain.entities.social_event import EmployeeList
 from src.venue.domain.entities.social_event import SocialEvent
 from src.venue.domain.entities.venue import PrivateSpot
 from src.venue.domain.entities.venue import Venue
@@ -8,7 +9,7 @@ from src.venue.domain.exceptions import SocialEventDoesNotExist
 from src.venue.domain.exceptions import VenueDoesNotExist
 
 
-class VenueRepository(ABC):
+class VenueRepository(ABC):  # noqa: WPS214  Too many methods
 
     @abstractmethod
     def has_venue(self, venue_id: str) -> bool:
@@ -36,6 +37,10 @@ class VenueRepository(ABC):
 
     @abstractmethod
     def add_social_event(self, social_event: SocialEvent) -> None:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def add_employee_list_to_social_event(self, social_event_id: str, employee_list: EmployeeList) -> None:
         raise NotImplementedError()
 
 
@@ -71,3 +76,9 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
 
     def add_social_event(self, social_event: SocialEvent) -> None:
         self.social_events[str(social_event.id)] = social_event
+
+    def add_employee_list_to_social_event(self, social_event_id: str, employee_list: EmployeeList) -> None:
+        if social_event_id not in self.social_events:
+            raise SocialEventDoesNotExist()
+        social_event = self.social_events[social_event_id]
+        social_event.employee_lists[employee_list.code] = employee_list

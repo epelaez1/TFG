@@ -8,7 +8,7 @@ from pydantic import Field
 from src.resources.pydantic_types.object_id import PyObjectId
 
 
-class EmployeesList(BaseModel):
+class EmployeeList(BaseModel):
     employee_name: str
     code: str
     subscribed_user: list[str] = Field(default_factory=list)
@@ -31,7 +31,7 @@ class SocialEvent(BaseModel):
     description: str
     start_date: datetime
     end_date: datetime
-    employee_lists: dict[str, EmployeesList] = Field(default_factory=dict)
+    employee_lists: dict[str, EmployeeList] = Field(default_factory=dict)
     private_spots: list[PrivateSpot] = Field(default_factory=list)
 
     class Config:
