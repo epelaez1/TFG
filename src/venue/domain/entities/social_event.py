@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from typing import Optional
 
 from bson import ObjectId
@@ -13,19 +14,28 @@ class EmployeeList(BaseModel):
     code: str
 
     def __hash__(self) -> int:
-        return hash(self._key())
+        return hash(self.code)
 
-    def _key(self) -> str:
-        return self.code
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, EmployeeList):
+            return False
+        return self.code == other.code
 
 
-class PrivateSpot(BaseModel):
-    spot_id: str
+class PrivateSpotOffer(BaseModel):
     spot_number: int
     available: bool = True
     price: int
     buyer_email: Optional[str] = None
     users_list: list[str] = Field(default_factory=list)
+
+    def __hash__(self) -> int:
+        return hash(self.spot_number)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, PrivateSpotOffer):
+            return False
+        return self.spot_number == other.spot_number
 
 
 class SocialEvent(BaseModel):
@@ -36,8 +46,8 @@ class SocialEvent(BaseModel):
     description: str
     start_date: datetime
     end_date: datetime
+    private_spot_offers: set[PrivateSpotOffer]
     employee_lists: set[EmployeeList] = Field(default_factory=set)
-    private_spots: list[PrivateSpot] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
