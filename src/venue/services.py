@@ -3,6 +3,7 @@ from datetime import datetime
 from geojson_pydantic import Point
 
 from src.venue.domain import exceptions
+from src.venue.domain.entities.social_event import EmployeeList
 from src.venue.domain.entities.social_event import SocialEvent
 from src.venue.domain.entities.venue import PrivateSpot
 from src.venue.domain.entities.venue import Venue
@@ -91,3 +92,22 @@ def get_social_event(author_email: str, social_event_id: str, venue_repository: 
     if social_event.owner_email != author_email:
         raise exceptions.AuthorIsNotTheOwner()
     return social_event
+
+
+def add_employee_list_to_social_event(
+    author_email: str,
+    employee_name: str,
+    code: str,
+    social_event_id: str,
+    venue_repository: VenueRepository,
+) -> None:
+
+    social_event = venue_repository.get_social_event(social_event_id=social_event_id)
+    if author_email != social_event.owner_email:
+        raise exceptions.AuthorIsNotTheOwner()
+
+    if code in social_event.employee_lists:
+        raise exceptions.EmployeeCodeAlreadyInUse()
+
+    employee_list = EmployeeList(code=code, employee_name=employee_name)
+    venue_repository.add_employee_list_to_social_event(social_event_id=social_event_id, employee_list=employee_list)

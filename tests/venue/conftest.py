@@ -7,6 +7,7 @@ from geojson_pydantic import Point
 from pydantic import BaseModel
 from pydantic import Field
 
+from src.venue.domain.entities.social_event import SocialEvent
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.repository import BasicVenueRepository
 from src.venue.domain.repository import VenueRepository
@@ -63,13 +64,6 @@ def registered_venue(
     )
 
 
-@pytest.fixture
-def venue_repository(registered_venue: Venue) -> VenueRepository:
-    repo = BasicVenueRepository()
-    repo.add_venue(registered_venue)
-    return repo
-
-
 def tomorrow() -> datetime:
     return datetime.utcnow() + timedelta(days=1)
 
@@ -89,3 +83,46 @@ class SocialEventSample(BaseModel):
 @pytest.fixture
 def social_event_sample() -> SocialEventSample:
     return SocialEventSample()
+
+
+class EmployeeListSample(BaseModel):
+    employee_name: str = 'Bob'
+    code: str = 'QWERTY'
+
+
+@pytest.fixture
+def employee_list_sample() -> EmployeeListSample:
+    return EmployeeListSample()
+
+
+@pytest.fixture
+def registered_social_event_id() -> str:
+    return '61a964bd62e7d5b769ffd163'
+
+
+@pytest.fixture
+def registered_social_event(
+    registered_owner: str,
+    registered_social_event_id: str,
+    registered_venue_id: str,
+) -> SocialEvent:
+    social_event_data = {
+        **SocialEventSample().dict(),
+        'venue_id': registered_venue_id,
+    }
+    return SocialEvent(
+        _id=registered_social_event_id,
+        owner_email=registered_owner,
+        **social_event_data,
+    )
+
+
+@pytest.fixture
+def venue_repository(
+    registered_venue: Venue,
+    registered_social_event: SocialEvent,
+) -> VenueRepository:
+    repo = BasicVenueRepository()
+    repo.add_venue(registered_venue)
+    repo.add_social_event(registered_social_event)
+    return repo

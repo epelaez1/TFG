@@ -13,3 +13,7 @@ class PrivateSpotNumberAlreadyAssigned(Exception):
 
 class SocialEventDoesNotExist(Exception):
     """" There is no social event with that id """
+
+
+class EmployeeCodeAlreadyInUse(Exception):
+    """" The employee code provided is already in use in other list """

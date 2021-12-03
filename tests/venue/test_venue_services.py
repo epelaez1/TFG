@@ -5,6 +5,7 @@ from src.venue import services
 from src.venue.domain import exceptions
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.repository import VenueRepository
+from tests.venue.conftest import EmployeeListSample
 from tests.venue.conftest import PrivateSpotSample
 from tests.venue.conftest import SocialEventSample
 from tests.venue.conftest import VenueSample
@@ -127,7 +128,7 @@ def test_not_the_owner_create_social_event(
         )
 
 
-def test_create_social_event_from_inexistent_venue(  # noqa: WPS118  Name too long
+def test_create_social_event_from_inexistent_venue(
     social_event_sample: SocialEventSample,
     venue_repository: VenueRepository,
 ):
@@ -189,3 +190,76 @@ def test_get_inexistent_social_event(
 ):
     with pytest.raises(exceptions.SocialEventDoesNotExist):
         venue_repository.get_social_event(str(ObjectId()))
+
+
+def test_add_employee_list_to_social_event(
+    employee_list_sample: EmployeeListSample,
+    registered_social_event_id: str,
+    registered_owner: str,
+    venue_repository: VenueRepository,
+):
+    services.add_employee_list_to_social_event(
+        author_email=registered_owner,
+        employee_name=employee_list_sample.employee_name,
+        code=employee_list_sample.code,
+        social_event_id=registered_social_event_id,
+        venue_repository=venue_repository,
+    )
+    social_event = venue_repository.get_social_event(registered_social_event_id)
+    assert employee_list_sample.code in social_event.employee_lists
+    assert employee_list_sample.dict().items() <= social_event.employee_lists[employee_list_sample.code].dict().items()
+
+
+def test_add_employee_list_to_inexistent_social_event(
+    employee_list_sample: EmployeeListSample,
+    registered_owner: str,
+    venue_repository: VenueRepository,
+):
+
+    with pytest.raises(exceptions.SocialEventDoesNotExist):
+        services.add_employee_list_to_social_event(
+            author_email=registered_owner,
+            employee_name=employee_list_sample.employee_name,
+            code=employee_list_sample.code,
+            social_event_id=ObjectId(),
+            venue_repository=venue_repository,
+        )
+
+
+def test_not_the_owner_add_employee_list(
+    employee_list_sample: EmployeeListSample,
+    registered_social_event_id: str,
+    venue_repository: VenueRepository,
+):
+    with pytest.raises(exceptions.AuthorIsNotTheOwner):
+        services.add_employee_list_to_social_event(
+            author_email='not_owner@mail.es',
+            employee_name=employee_list_sample.employee_name,
+            code=employee_list_sample.code,
+            social_event_id=registered_social_event_id,
+            venue_repository=venue_repository,
+        )
+
+
+def test_add_employee_list_with_repeated_code(
+    employee_list_sample: EmployeeListSample,
+    registered_social_event_id: str,
+    registered_owner: str,
+    venue_repository: VenueRepository,
+):
+    services.add_employee_list_to_social_event(
+        author_email=registered_owner,
+        employee_name=employee_list_sample.employee_name,
+        code=employee_list_sample.code,
+        social_event_id=registered_social_event_id,
+        venue_repository=venue_repository,
+    )
+
+    with pytest.raises(exceptions.EmployeeCodeAlreadyInUse):
+        services.add_employee_list_to_social_event(
+            author_email=registered_owner,
+            employee_name=employee_list_sample.employee_name,
+            code=employee_list_sample.code,
+            social_event_id=registered_social_event_id,
+            venue_repository=venue_repository,
+        )
