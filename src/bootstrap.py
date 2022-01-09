@@ -5,17 +5,21 @@ from src.authentication.entrypoints.router import auth_router
 from src.profile.entrypoints.exception_handlers import profile_exc_handlers
 from src.profile.entrypoints.router import profile_router
 from src.service_info.entrypoints.router import service_info_router
+from src.venue.entrypoints.exception_handlers import venue_exc_handlers
+from src.venue.entrypoints.router import venue_router
 
 all_routers = [
     service_info_router,
     profile_router,
     auth_router,
+    venue_router,
 ]
 
 
 all_exc_handlers = [
     profile_exc_handlers,
     auth_exc_handlers,
+    venue_exc_handlers,
 ]
 
 

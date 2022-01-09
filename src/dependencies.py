@@ -10,7 +10,8 @@ from src.config import mongo_settings
 from src.mongo_client import MongoDBClient
 from src.profile.domain.repository import BasicProfileRepository
 from src.profile.storage.mongo_repository import ProfileMongoDB
-
+from src.venue.domain.repository import BasicVenueRepository
+from src.venue.storage. mongo_repository import VenueMongoDB
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
@@ -40,6 +41,11 @@ class Repositories:
             BasicCredentialsRepository()
             if environment.is_test
             else CredentialsMongoDB(client=self.mongo_client)
+        )
+        self.venue_repository = (
+            BasicVenueRepository()
+            if environment.is_test
+            else VenueMongoDB(client=self.mongo_client)
         )
 
 

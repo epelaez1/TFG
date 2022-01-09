@@ -1,9 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 
-from src.venue.domain.entities.social_event import EmployeeList
 from src.venue.domain.entities.social_event import SocialEvent
-from src.venue.domain.entities.venue import PrivateSpot
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.exceptions import SocialEventDoesNotExist
 from src.venue.domain.exceptions import VenueDoesNotExist
@@ -24,24 +22,36 @@ class VenueRepository(ABC):  # noqa: WPS214  Too many methods
         raise NotImplementedError
 
     @abstractmethod
-    def add_private_spot(self, venue_id: str, private_spot: PrivateSpot) -> None:
+    def update_venue(self, venue_id: str, new_venue: Venue) -> None:
         raise NotImplementedError
 
     @abstractmethod
     def get_social_event(self, social_event_id: str) -> SocialEvent:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def has_social_event(self, social_event_id: str) -> bool:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def add_social_event(self, social_event: SocialEvent) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
-    def add_employee_list_to_social_event(self, social_event_id: str, employee_list: EmployeeList) -> None:
-        raise NotImplementedError()
+    def get_all_venues(self) -> list[Venue]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_all_social_events(self) -> list[SocialEvent]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_social_events_of_venue(self, venue_id: str) -> list[SocialEvent]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def update_social_event(self, social_event_id: str, new_social_event: SocialEvent) -> None:
+        raise NotImplementedError
 
 
 class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
@@ -62,8 +72,8 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
             raise VenueDoesNotExist()
         return venue
 
-    def add_private_spot(self, venue_id: str, private_spot: PrivateSpot) -> None:
-        self.venues[venue_id].private_spots.add(private_spot)
+    def update_venue(self, venue_id: str, new_venue: Venue) -> None:
+        self.venues[venue_id] = new_venue
 
     def has_social_event(self, social_event_id: str) -> bool:
         return social_event_id in self.social_events
@@ -76,8 +86,14 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
     def add_social_event(self, social_event: SocialEvent) -> None:
         self.social_events[str(social_event.id)] = social_event
 
-    def add_employee_list_to_social_event(self, social_event_id: str, employee_list: EmployeeList) -> None:
-        if social_event_id not in self.social_events:
-            raise SocialEventDoesNotExist()
-        social_event = self.social_events[social_event_id]
-        social_event.employee_lists.add(employee_list)
+    def get_all_venues(self) -> list[Venue]:
+        return list(self.venues.values())
+
+    def get_all_social_events(self) -> list[SocialEvent]:
+        return list(self.social_events.values())
+
+    def get_social_events_of_venue(self, venue_id: str) -> list[SocialEvent]:
+        return [social_event for social_event in self.social_events.values() if social_event.venue_id == venue_id]
+
+    def update_social_event(self, social_event_id: str, new_social_event: SocialEvent) -> None:
+        self.social_events[social_event_id] = new_social_event

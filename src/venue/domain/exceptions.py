@@ -1,4 +1,4 @@
-
+#  noqa: WPS202
 class VenueDoesNotExist(Exception):
     """ Venue does not exist """
 
@@ -17,3 +17,23 @@ class SocialEventDoesNotExist(Exception):
 
 class EmployeeCodeAlreadyInUse(Exception):
     """" The employee code provided is already in use in other list """
+
+
+class PrivateSpotNotFound(Exception):
+    """ The spot number provided does not match with any spot of the venue """
+
+
+class SpotOfferAlreadyExists(Exception):
+    """" The private spot is already included in the social event """
+
+
+class PrivateSpotOfferDoesNotExist(Exception):
+    """ The private spot does not exists """
+
+
+class PrivateSpotIsNotAvailable(Exception):
+    """ The private spot is no available for reservations"""
+
+
+class UserIsNotInsideTheSocialEvent(Exception):
+    """ The user has never accessed the social event"""
