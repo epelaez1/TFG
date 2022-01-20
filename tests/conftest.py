@@ -1,11 +1,12 @@
 import pytest
+from bson import ObjectId
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from main import app as main_app
 from src.config import environment
 from src.config import mongo_settings
 from src.dependencies import repositories
+from src.main import app as main_app
 from src.mongo_client import MongoDBClient
 
 TEST_DB_NAME = 'tfg_testing_db'
@@ -32,3 +33,13 @@ def mongo_client():
 @pytest.fixture
 def secret_key():
     return environment.secret_key
+
+
+@pytest.fixture
+def sample_user_email() -> str:
+    return 'sample_user@mail.com'
+
+
+@pytest.fixture
+def random_id() -> str:
+    return str(ObjectId())

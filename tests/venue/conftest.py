@@ -13,6 +13,7 @@ from src.venue.domain.entities.venue import PrivateSpot
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.repository import BasicVenueRepository
 from src.venue.domain.repository import VenueRepository
+from src.venue.storage.mongo_repository import VenueMongoDB
 
 
 class VenueSample(BaseModel):
@@ -70,7 +71,7 @@ def registered_venue(
             'owner_email': registered_owner,
         },
     )
-    venue.private_spots = {private_spot}
+    venue.add_private_spot(**private_spot.dict())
     return venue
 
 
@@ -122,7 +123,7 @@ def registered_social_event(
     }
     private_spot_offers = {
         PrivateSpotOffer(**private_spot.dict())
-        for private_spot in registered_venue.private_spots
+        for private_spot in registered_venue.private_spots.values()
     }
     return SocialEvent(
         _id=registered_social_event_id,
@@ -141,3 +142,21 @@ def venue_repository(
     repo.add_venue(registered_venue)
     repo.add_social_event(registered_social_event)
     return repo
+
+
+@pytest.fixture
+def mongo_venue_repository(mongo_client) -> VenueMongoDB:
+    return VenueMongoDB(client=mongo_client)
+
+
+@pytest.fixture
+def social_event(
+    social_event_sample: SocialEventSample,
+    registered_owner: str,
+) -> SocialEvent:
+    private_spot_offers: list[PrivateSpotOffer] = []
+    return SocialEvent(
+        **social_event_sample.dict(),
+        owner_email=registered_owner,
+        private_spot_offers=private_spot_offers,
+    )

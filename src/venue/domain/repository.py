@@ -4,6 +4,7 @@ from abc import abstractmethod
 from src.venue.domain.entities.social_event import SocialEvent
 from src.venue.domain.entities.venue import Venue
 from src.venue.domain.exceptions import SocialEventDoesNotExist
+from src.venue.domain.exceptions import UserIsNotInsideTheSocialEvent
 from src.venue.domain.exceptions import VenueDoesNotExist
 
 
@@ -53,6 +54,18 @@ class VenueRepository(ABC):  # noqa: WPS214  Too many methods
     def update_social_event(self, social_event_id: str, new_social_event: SocialEvent) -> None:
         raise NotImplementedError
 
+    @abstractmethod
+    def access_social_event(self, social_event_id: str, user_email: str) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def leave_social_event(self, social_event_id: str, user_email: str) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def join_social_event(self, social_event_id: str, employee_code: str, user_email: str) -> None:
+        raise NotImplementedError
+
 
 class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
 
@@ -97,3 +110,24 @@ class BasicVenueRepository(VenueRepository):  # noqa: WPS214  Too many methods
 
     def update_social_event(self, social_event_id: str, new_social_event: SocialEvent) -> None:
         self.social_events[social_event_id] = new_social_event
+
+    def access_social_event(self, social_event_id: str, user_email: str) -> None:
+        if social_event_id not in self.social_events:
+            raise SocialEventDoesNotExist()
+        social_event = self.social_events[social_event_id]
+        if user_email not in social_event.people_inside:
+            social_event.people_inside.append(user_email)
+        if user_email not in social_event.people_history:
+            social_event.people_history.append(user_email)
+
+    def leave_social_event(self, social_event_id: str, user_email: str) -> None:
+        if social_event_id not in self.social_events:
+            raise SocialEventDoesNotExist()
+        social_event = self.social_events[social_event_id]
+        if user_email not in social_event.people_inside:
+            raise UserIsNotInsideTheSocialEvent()
+        social_event.people_inside.remove(user_email)
+
+    def join_social_event(self, social_event_id: str, employee_code: str, user_email: str) -> None:
+        social_event = self.social_events[social_event_id]
+        social_event.employee_lists[employee_code].users.append(user_email)

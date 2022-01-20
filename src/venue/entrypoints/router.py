@@ -70,7 +70,7 @@ async def add_private_spot(
 )
 async def create_social_event(
     venue_id: str,
-    social_event: models.SocialEvent,
+    social_event: models.NewSocialEvent,
     email: str = Depends(authorized_user_email),
 ) -> SocialEvent:
     social_event_id = services.create_social_event(

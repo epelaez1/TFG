@@ -10,6 +10,7 @@ from src.authentication.domain.entities.hashed_password import HashedPassword
 from src.authentication.domain.entities.session import create_session_token
 from src.authentication.domain.entities.session import SessionToken
 
+
 if TYPE_CHECKING:
     from src.authentication.domain.repository import CredentialsRepository
 

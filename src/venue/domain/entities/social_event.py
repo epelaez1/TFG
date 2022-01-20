@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any
 from typing import Optional
+from typing import TYPE_CHECKING
 
 from bson import ObjectId
 from pydantic import BaseModel
@@ -9,14 +10,14 @@ from pydantic import Field
 from src.resources.pydantic_types.object_id import PyObjectId
 from src.venue.domain import exceptions
 
+if TYPE_CHECKING:
+    from src.venue.domain.repository import VenueRepository
+
 
 class EmployeeList(BaseModel):
     employee_name: str
     code: str
-    users: set[str] = Field(default_factory=set)
-
-    def join(self, author_email: str) -> None:
-        self.users.add(author_email)
+    users: list[str] = Field(default_factory=list)
 
     def __hash__(self) -> int:
         return hash(self.code)
@@ -58,10 +59,10 @@ class SocialEvent(BaseModel):
     description: str
     start_date: datetime
     end_date: datetime
-    private_spot_offers: set[PrivateSpotOffer]
+    private_spot_offers: list[PrivateSpotOffer]
     employee_lists: dict[str, EmployeeList] = Field(default_factory=dict)
-    people_inside: set[str] = Field(default_factory=set)
-    people_history: set[str] = Field(default_factory=set)
+    people_inside: list[str] = Field(default_factory=list)
+    people_history: list[str] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
@@ -69,11 +70,15 @@ class SocialEvent(BaseModel):
             ObjectId: str,
         }
 
+    @property
+    def id_str(self) -> str:
+        return str(self.id)
+
     def add_private_spot_offer(self, spot_number: int, price: int) -> None:
         new_spot_offer = PrivateSpotOffer(spot_number=spot_number, price=price)
         if new_spot_offer in self.private_spot_offers:
             raise exceptions.SpotOfferAlreadyExists()
-        self.private_spot_offers.add(PrivateSpotOffer(spot_number=spot_number, price=price))
+        self.private_spot_offers.append(PrivateSpotOffer(spot_number=spot_number, price=price))
 
     def reserve_spot(self, author_email: str, spot_number: int) -> None:
         spot = next(
@@ -84,8 +89,14 @@ class SocialEvent(BaseModel):
             raise exceptions.PrivateSpotOfferDoesNotExist()
         spot.reserve(author_email)
 
-    def join(self, author_email: str, employee_code: str) -> None:
-        self.employee_lists[employee_code].join(author_email)
+    def join(self, author_email: str, employee_code: str, venue_repository: 'VenueRepository') -> None:
+        if employee_code not in self.employee_lists:
+            raise exceptions.EmployeeCodeDoesNotExist()
+        venue_repository.join_social_event(
+            social_event_id=self.id_str,
+            employee_code=employee_code,
+            user_email=author_email,
+        )
 
     def add_employee_list(self, code: str, employee_name: str) -> None:
         if code in self.employee_lists:
@@ -93,11 +104,7 @@ class SocialEvent(BaseModel):
         employee_list = EmployeeList(code=code, employee_name=employee_name)
         self.employee_lists[code] = employee_list
 
-    def access_social_event(self, user_email: str) -> None:
-        self.people_inside.add(user_email)
-        self.people_history.add(user_email)
-
-    def leave_social_event(self, user_email: str) -> None:
-        if user_email not in self.people_inside:
-            raise exceptions.UserIsNotInsideTheSocialEvent()
-        self.people_inside.remove(user_email)
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, SocialEvent):
+            return False
+        return self.id_str == other.id_str

@@ -37,3 +37,7 @@ class PrivateSpotIsNotAvailable(Exception):
 
 class UserIsNotInsideTheSocialEvent(Exception):
     """ The user has never accessed the social event"""
+
+
+class EmployeeCodeDoesNotExist(Exception):
+    """ The employee code does not exist """
