@@ -40,7 +40,7 @@ class Venue(BaseModel):
     country: str
     geolocation: Point
     owner_email: str
-    private_spots: set[PrivateSpot] = Field(default_factory=set)
+    private_spots: dict[int, PrivateSpot] = Field(default_factory=dict)
 
     class Config:
         arbitrary_types_allowed = True
@@ -48,17 +48,21 @@ class Venue(BaseModel):
             ObjectId: str,
         }
 
+    @property
+    def id_str(self) -> str:
+        return str(self.id)
+
     def add_private_spot_offer_to_social_event(self, social_event: SocialEvent, spot_number: int) -> None:
-        private_spot = next(
-            (private_spot for private_spot in self.private_spots if private_spot.spot_number == spot_number),
-            None,
-        )
+        private_spot = self.private_spots.get(spot_number, None)
         if private_spot is None:
             raise exceptions.PrivateSpotNotFound()
 
         social_event.add_private_spot_offer(spot_number=private_spot.spot_number, price=private_spot.price)
 
     def add_private_spot(self, spot_number: int, name: str | None, description: str | None, price: int) -> None:
+        if spot_number in self.private_spots:
+            raise exceptions.PrivateSpotNumberAlreadyAssigned()
+
         private_spot = PrivateSpot(
             spot_number=spot_number,
             name=name,
@@ -66,7 +70,12 @@ class Venue(BaseModel):
             price=price,
         )
 
-        if private_spot in self.private_spots:
-            raise exceptions.PrivateSpotNumberAlreadyAssigned()
+        self.private_spots[private_spot.spot_number] = private_spot
 
-        self.private_spots.add(private_spot)
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Venue):
+            return False
+        return self.id == other.id

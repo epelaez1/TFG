@@ -70,10 +70,7 @@ def create_social_event(  # noqa: WPS211 Too many arguments
     venue = venue_repository.get_venue(venue_id)
     if author_email != venue.owner_email:
         raise exceptions.AuthorIsNotTheOwner()
-    private_spot_offers = {
-        PrivateSpotOffer(**private_spot.dict())
-        for private_spot in venue.private_spots
-    }
+    private_spot_offers = {PrivateSpotOffer(**private_spot.dict()) for private_spot in venue.private_spots.values()}
     social_event = SocialEvent(
         owner_email=author_email,
         venue_id=venue_id,
@@ -170,9 +167,7 @@ def join_social_event(
     social_event = venue_repository.get_social_event(
         social_event_id=social_event_id,
     )
-
-    social_event.join(author_email, employee_code)
-    venue_repository.update_social_event(social_event_id, social_event)
+    social_event.join(author_email, employee_code, venue_repository=venue_repository)
 
 
 def access_social_event(
@@ -180,11 +175,10 @@ def access_social_event(
     social_event_id: str,
     venue_repository: VenueRepository,
 ) -> None:
-    social_event = venue_repository.get_social_event(
+    venue_repository.access_social_event(
         social_event_id=social_event_id,
+        user_email=author_email,
     )
-    social_event.access_social_event(user_email=author_email)
-    venue_repository.update_social_event(social_event_id, social_event)
 
 
 def leave_social_event(
@@ -192,8 +186,7 @@ def leave_social_event(
     social_event_id: str,
     venue_repository: VenueRepository,
 ) -> None:
-    social_event = venue_repository.get_social_event(
+    venue_repository.leave_social_event(
         social_event_id=social_event_id,
+        user_email=author_email,
     )
-    social_event.leave_social_event(user_email=author_email)
-    venue_repository.update_social_event(social_event_id, social_event)
